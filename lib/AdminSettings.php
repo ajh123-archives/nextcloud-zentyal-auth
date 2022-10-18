@@ -7,13 +7,18 @@ namespace OCA\ZentyalAuthBackend;
 
 use OCP\Settings\ISettings;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCA\ZentyalAuthBackend\Db\ServerMapper;
 
 /**
  * Settings controller for the administration page
  */
 class AdminSettings implements ISettings {
 
+    private $mapper;
+
     public function __construct() {
+        // $this->mapper = \OC::$server->getDatabaseConnection();
+        $this->mapper = new ServerMapper(\OC::$server->getDatabaseConnection());
     }
 
 	/**
@@ -21,6 +26,8 @@ class AdminSettings implements ISettings {
 	 */
 	public function getForm() {
         $parameters = [];
+        $parameters["servers"] = $this->mapper->findAll();
+        
 		return new TemplateResponse('zentyalauthbackend', 'settings', $parameters);
 	}
 
